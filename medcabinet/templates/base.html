@@ -4,6 +4,14 @@
     <title>Medical Cabinet - {{ title }}</title>
     <link rel="stylesheet" href="https://unpkg.com/picnic"/>
   </head>
+  <style>
+    body {
+      background-image: url('https://github.com/Med-Cabinet-37/Med-Cabinet/blob/main/images/cannabis.jpg?raw=true');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+  </style>
   <body>
     
 
@@ -15,19 +23,36 @@
     <article class="flex two" style="padding: 3em 1em;">
       {% block content %}
       <div>
-        <form action="/find" method="post">
+        <form id="input-form" action="/find" method="post">
           <input type="text" name="user_text" placeholder="Enter medical ailments and flavor preferences">
           <input type="submit" value="Find Strains">
         </form>
         <h2>Results</h2>
         <p>{{ message }}</p> 
       </div>
-      <div>
-        <img src="{{url_for('images', filename='cannabis.jpg')}}" alt="middle" />
-        <img src="images/cannabis.jpg" alt="testing..."/>
+      <div id='strain-name'>
       </div>
+      <p id="strain-description"></p>
       {% endblock %}
     </article>
     <!-- <script src="https://cdn.jsdelivr.net/npm/umbrellajs"/> -->
   </body>
+  <script>
+    let form = document.getElementById("input-form")
+    let results = document.getElementById("strain-name")
+    let description = document.getElementById("strain-description")
+    form.addEventListener("submit", e => {
+      e.preventDefault()
+      const formData = new FormData(form)
+
+      fetch('/find', {
+        method: "POST",
+        body: formData,
+      }).then(response => response.json())
+      .then(result => {
+        results.innerText = result['strain']
+        description.innerText = result['description']})
+    }
+    )
+  </script>
 </html>
