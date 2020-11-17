@@ -3,15 +3,17 @@ from flask import Flask, render_template, request
 import numpy as np
 import pandas as pd 
 import joblib
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras import Input
-from tensorflow.keras.losses import sparse_categorical_crossentropy
+import spacy
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense
+# from tensorflow.keras import Input
+# from tensorflow.keras.losses import sparse_categorical_crossentropy
 
 df = pd.read_csv('data/cannabis.csv')
 y = pd.read_csv('data/lemmas.csv')['Strain']
 
-best_model = joblib.load('neural-net.joblib')
+nn = joblib.load('nearest_neighbors.joblib')
+nlp = spacy.load('model')
 
 def create_app():
 
@@ -26,8 +28,8 @@ def create_app():
 
     @app.route('/find', methods=['POST'])
     def find():
-        user_text = request.values["user_text"]
-        message = predict(user_text)
+        message = predict(request.values["user_text"])
+        #message = "Testing..."
         return render_template(
             'base.html',
             message=message
@@ -35,23 +37,39 @@ def create_app():
 
     return app
 
-
 def clean_example(ex: str) -> str:
     tokens = [
-    token.lemma_ for token in nlp(ex)
-        if not token.is_stop
-        if not token.is_punct
-        if not token.is_space
+        token.lemma_ for token in nlp(ex)
+            if not token.is_stop
+            if not token.is_punct
+            if not token.is_space
     ]
     return " ".join(tokens)
+def predict(desc: str) -> pd.DataFrame:
+    if len(desc) == 0:
+        return 'N/A'
+    vector = nlp(clean_example(desc)).vector.reshape(1, -1)
+    # returns the n = 5 nearest neighbors
+    n = 1
+    result = nn.kneighbors(vector, n)
+    return df.iloc[result[1][0]]
 
-def predict(ex: str) -> pd.Series:
-    '''Takes in user's input and returns a prediction'''
-    cleaned = clean_example(ex)
-    as_vector = nlp(cleaned).vector.reshape(1, -1)
-    prediction = np.argmax(
-        best_model.predict(as_vector),
-        axis=-1
-    )[0]
-    strain = y.iloc[prediction]
-    return df[df['Strain'] == strain].iloc[0]
+# def clean_example(ex: str) -> str:
+#     tokens = [
+#     token.lemma_ for token in nlp(ex)
+#         if not token.is_stop
+#         if not token.is_punct
+#         if not token.is_space
+#     ]
+#     return " ".join(tokens)
+
+# def predict(ex: str) -> pd.Series:
+#     '''Takes in user's input and returns a prediction'''
+#     cleaned = clean_example(ex)
+#     as_vector = nlp(cleaned).vector.reshape(1, -1)
+#     prediction = np.argmax(
+#         best_model.predict(as_vector),
+#         axis=-1
+#     )[0]
+#     strain = y.iloc[prediction]
+#     return df[df['Strain'] == strain].iloc[0]

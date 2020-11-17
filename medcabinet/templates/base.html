@@ -5,9 +5,12 @@
     <link rel="stylesheet" href="https://unpkg.com/picnic"/>
   </head>
   <body>
+    
+
     <nav>
       <a href="/" class="brand"><span>Find the most appropriate strain of medicinal marijuana for medical conditions</span></a>
     </nav>
+
 
     <article class="flex two" style="padding: 3em 1em;">
       {% block content %}
@@ -16,10 +19,12 @@
           <input type="text" name="user_text" placeholder="Enter medical ailments and flavor preferences">
           <input type="submit" value="Find Strains">
         </form>
-      </div>
-      <div>
         <h2>Results</h2>
         <p>{{ message }}</p> 
+      </div>
+      <div>
+        <img src="{{url_for('images', filename='cannabis.jpg')}}" alt="middle" />
+        <img src="images/cannabis.jpg" alt="testing..."/>
       </div>
       {% endblock %}
     </article>
