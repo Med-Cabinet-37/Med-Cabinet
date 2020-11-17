@@ -13,6 +13,10 @@ pandas = "*"
 scikit-learn = "*"
 tensorflow = "*"
 flask = "*"
+gunicorn = "*"
+python-dotenv = "*"
+jinja2 = "*"
+joblib = "*"
 
 [requires]
 python_version = "3.8"

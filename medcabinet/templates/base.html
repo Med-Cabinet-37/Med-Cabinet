@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Medical Cabinet - {{ title }}</title>
+    <link rel="stylesheet" href="https://unpkg.com/picnic"/>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="brand"><span>Find the most appropriate strain of medicinal marijuana for medical conditions</span></a>
+    </nav>
+
+    <article class="flex two" style="padding: 3em 1em;">
+      {% block content %}
+      <div>
+        <form action="/find" method="post">
+          <input type="text" name="user_text" placeholder="Enter medical ailments and flavor preferences">
+          <input type="submit" value="Find Strains">
+        </form>
+      </div>
+      <div>
+        <h2>Results</h2>
+        <p>{{ message }}</p> 
+      </div>
+      {% endblock %}
+    </article>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/umbrellajs"/> -->
+  </body>
+</html>
