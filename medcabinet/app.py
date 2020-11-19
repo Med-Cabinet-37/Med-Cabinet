@@ -11,7 +11,7 @@ from tensorflow.keras.losses import sparse_categorical_crossentropy
 
 df = pd.read_csv('data/cannabis.csv')
 
-best_model = load_model('neural-network-small.h5')
+best_model = load_model('neural-network.h5')
 
 nlp = spacy.load('model')
 
