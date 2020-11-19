@@ -10,9 +10,8 @@ from tensorflow.keras import Input
 from tensorflow.keras.losses import sparse_categorical_crossentropy
 
 df = pd.read_csv('data/cannabis.csv')
-y = pd.read_csv('data/lemmas.csv')['Strain']
+#y = pd.read_csv('data/lemmas.csv')['Strain']
 
-#nn = joblib.load('nearest_neighbors.joblib')
 best_model = load_model('neural-network.h5')
 
 nlp = spacy.load('model')
@@ -45,40 +44,39 @@ def create_app():
 
 # def clean_example(ex: str) -> str:
 #     tokens = [
-#         token.lemma_ for token in nlp(ex)
-#             if not token.is_stop
-#             if not token.is_punct
-#             if not token.is_space
+#     token.lemma_ for token in nlp(ex)
+#         if not token.is_stop
+#         if not token.is_punct
+#         if not token.is_space
 #     ]
 #     return " ".join(tokens)
-# def predict(desc: str) -> pd.DataFrame:
-#     if len(desc) == 0:
-#         return 'N/A'
-#     vector = nlp(clean_example(desc)).vector.reshape(1, -1)
-#     # returns the n = 5 nearest neighbors
-#     n = 1
-#     result = nn.kneighbors(vector, n)
-#     return df.iloc[result[1][0]]
+
+# def predict(ex: str) -> pd.Series:
+#     '''Takes in user's input and returns a prediction'''
+#     cleaned = clean_example(ex)
+#     as_vector = nlp(cleaned).vector.reshape(1, -1)
+#     if as_vector.shape[1] == 0:
+#         return "More information needed"
+#     else:
+#         prediction = np.argmax(
+#             best_model.predict(as_vector),
+#             axis=-1
+#         )[0]
+#         strain = y.iloc[prediction]
+#         return df[df['Strain'] == strain].iloc[0]
 
 def clean_example(ex: str) -> str:
     tokens = [
-    token.lemma_ for token in nlp(ex)
+      token.lemma_ for token in nlp(ex)
         if not token.is_stop
         if not token.is_punct
         if not token.is_space
     ]
     return " ".join(tokens)
-
 def predict(ex: str) -> pd.Series:
     '''Takes in user's input and returns a prediction'''
     cleaned = clean_example(ex)
     as_vector = nlp(cleaned).vector.reshape(1, -1)
-    if as_vector.shape[1] == 0:
-        return "More information needed"
-    else:
-        prediction = np.argmax(
-            best_model.predict(as_vector),
-            axis=-1
-        )[0]
-        strain = y.iloc[prediction]
-        return df[df['Strain'] == strain].iloc[0]
+    prediction = best_model.predict(as_vector)
+    strain = np.argmax(prediction, axis=-1)[0]
+    return df.iloc[strain]
