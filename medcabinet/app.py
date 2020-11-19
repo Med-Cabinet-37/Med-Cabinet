@@ -9,11 +9,11 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras import Input
 from tensorflow.keras.losses import sparse_categorical_crossentropy
 
-df = pd.read_csv('data/cannabis_final.csv')
+df = pd.read_csv('data/cannabis.csv')
 
-best_model = load_model('neural-network-final.h5')
+best_model = load_model('neural-network.h5')
 
-nlp = spacy.load('model_final')
+nlp = spacy.load('model')
 
 def create_app():
 
