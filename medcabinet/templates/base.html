@@ -13,7 +13,7 @@
     }
     div.transbox {
       background-color:aliceblue;
-      opacity: 0.7;
+      opacity: 0.78;
       margin:0 auto;
     }
     div.transbox p {
@@ -31,6 +31,7 @@
     <article class="flex two" style="padding: 4em 1em;">
       {% block content %}
       <div class="transbox">
+        <p>Med Cabinet is for new cannabis consumers, especially those trying to get off of pharmaceuticals, who want to use cannabis as a means to battle medical conditions and ailments.</p>
         <form id="input-form" action="/find" method="post">
           <input type="text" name="user_text" placeholder="Enter medical ailments and flavor preferences">
           <input type="submit" value="Find Strain">
@@ -38,6 +39,28 @@
         <h3 id='strain-name'></h3>
         <p id='strain-effects'></p>
         <p id="strain-description"></p>
+        <h3>Methodology</h3>
+        <p>
+          This web application was created using neuro-linguistic
+           programming techniques and a neural network model. 
+        </p>
+        <p>
+          The model was trained from vector representation of the 
+          text describing the effects, flavors, and description 
+          of each strain. Word similarity was used to expand 
+          the data by 10 times its original size to facilitate 
+          more accurate results.
+        </p> 
+        <p>
+          Using Spacy's en_core_web_md model, we were able to 
+          achieve 99% validation accuracy with our data! 
+          The model deployed to Heroku was trained with Spacy's 
+          small model, to accomodate for size restrictions.
+        </p>
+        <p>
+          This model and web app were authored 
+          by Nathan McDonough and Tomás Phillips.
+        </p>
       </div>
       {% endblock %}
     </article>
